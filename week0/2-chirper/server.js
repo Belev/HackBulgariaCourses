@@ -24,7 +24,7 @@ http.createServer(function (req, res) {
 
             requestsHandler.processGetRequest(parsedUrl.pathname, res, ChirpSystemController, dataArguments);
         } else if (req.method.toUpperCase() === 'POST') {
-            dataArguments = data || {};
+            dataArguments = data.toString() || {};
 
             requestsHandler.processPostRequest(dataArguments, parsedUrl.pathname, res, ChirpSystemController);
         } else if (req.method.toUpperCase() === 'DELETE') {

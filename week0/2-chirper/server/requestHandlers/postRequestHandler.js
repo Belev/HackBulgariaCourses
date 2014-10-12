@@ -29,7 +29,7 @@ function processPostRequest(data, urlPathName, res, controller) {
                     res.write(JSON.stringify({Error: err}));
                 }
 
-                return;
+                res.end();
             }
 
             res.writeHead(200, contentType);
@@ -47,7 +47,7 @@ function processPostRequest(data, urlPathName, res, controller) {
                     res.writeHead(400, contentType);
                     res.write(JSON.stringify({Error: err}));
                 }
-                return;
+                res.end();
             }
 
             res.writeHead(200, contentType);

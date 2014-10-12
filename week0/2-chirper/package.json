@@ -12,6 +12,7 @@
     "argparse": "^0.1.15",
     "mongoose": "^3.8.17",
     "mongoose-auto-increment": "^3.0.8",
-    "node-uuid": "^1.4.1"
+    "node-uuid": "^1.4.1",
+    "request": "^2.45.0"
   }
 }

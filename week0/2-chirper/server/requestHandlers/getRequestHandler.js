@@ -21,7 +21,7 @@ function processGetRequest(urlPathName, res, controller, args) {
             if (err) {
                 res.writeHead(400, contentType);
                 res.write(JSON.stringify({Error: err}));
-                return;
+                res.end();
             }
 
             res.writeHead(200, contentType);
