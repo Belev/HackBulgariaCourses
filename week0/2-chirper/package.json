@@ -9,7 +9,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "argparse": "^0.1.15"
+    "argparse": "^0.1.15",
     "mongoose": "^3.8.17",
     "mongoose-auto-increment": "^3.0.8",
     "node-uuid": "^1.4.1"
