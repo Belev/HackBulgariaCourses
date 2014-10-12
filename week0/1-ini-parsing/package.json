@@ -1,0 +1,15 @@
+{
+  "name": "HackBulgaria",
+  "version": "0.0.1",
+  "description": "Hack Bulgaria tasks",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Martin Belev",
+  "license": "MIT",
+  "devDependencies": {
+    "iniparser": "^1.0.5",
+    "q": "^1.0.1",
+    "chai": "^1.9.2"
+  }
+}
