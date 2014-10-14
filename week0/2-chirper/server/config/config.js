@@ -6,7 +6,6 @@ var path = require('path'),
 module.exports = {
     development: {
         rootPath: rootPath,
-        db: 'mongodb://localhost/chirpapi',
-        port: process.env.PORT || 8080
+        db: 'mongodb://localhost/chirpapi'
     }
 };

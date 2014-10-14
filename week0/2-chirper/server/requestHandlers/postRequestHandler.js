@@ -1,5 +1,6 @@
 "use strict";
-var contentType = {'Content-Type': 'application/json'};
+var contentType = {'Content-Type': 'application/json'},
+    errorMessageWriter = require('./errorMessageWriter');
 
 function processPostRequest(data, urlPathName, res, controller) {
     data = JSON.parse(data);
@@ -9,27 +10,19 @@ function processPostRequest(data, urlPathName, res, controller) {
     } else if (urlPathName === '/register') {
         registerUser(data, res, controller);
     } else {
-        res.writeHead(404, contentType);
-        res.write('Not found.');
-        res.end();
+        errorMessageWriter.writeNotFound(res);
     }
 
     function createChirp(data, res, controller) {
         controller.createChirp(data.username, data.key, data.chirpText, function (err, chirpId) {
             if (err) {
-                res.writeHead(400, contentType);
+                var errorDetails = {
+                    statusCode: 400,
+                    contentType: contentType,
+                    message: err
+                };
 
-                if (err === 'You are not authenticated to create new chirp.') {
-                    res.write(JSON.stringify({Error: 'You are not authenticated to create new chirp.'}));
-                } else if (err === 'Such user does not exists.') {
-                    res.write(JSON.stringify({Error: 'Such user does not exists.'}));
-                } else if (err === 'The provided user key is not for your account.') {
-                    res.write(JSON.stringify({Error: 'The provided user key is not for your account.'}));
-                } else {
-                    res.write(JSON.stringify({Error: err}));
-                }
-
-                res.end();
+                errorMessageWriter.write(errorDetails, res);
             }
 
             res.writeHead(200, contentType);
@@ -40,14 +33,13 @@ function processPostRequest(data, urlPathName, res, controller) {
     function registerUser(data, res, controller) {
         controller.registerUser(data.username, function (err, user) {
             if (err) {
-                if (err === 'User with the same username already exists.') {
-                    res.writeHead(409, contentType);
-                    res.write(JSON.stringify({Error: 'User with the same username exists.'}));
-                } else {
-                    res.writeHead(400, contentType);
-                    res.write(JSON.stringify({Error: err}));
-                }
-                res.end();
+                var errorDetails = {
+                    statusCode: 409,
+                    contentType: contentType,
+                    message: err
+                };
+
+                errorMessageWriter.write(errorDetails, res);
             }
 
             res.writeHead(200, contentType);

@@ -78,9 +78,6 @@ module.exports = {
                     return callback('User with this key does not exists.');
                 }
 
-                // if with that condition give error
-                // try with findOneAndRemove only with chirpId
-                // and if userId does not match return error
                 user.chirps -= 1;
                 user.save();
 
