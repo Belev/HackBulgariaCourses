@@ -1,0 +1,17 @@
+{
+    "name": "1-hackernews-scraper",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.9.7",
+        "mongoose": "^3.8.17",
+        "request": "^2.45.0",
+        "underscore": "^1.7.0"
+    }
+}
