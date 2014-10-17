@@ -7,3 +7,12 @@ then in scraper execute - node index.js
 
 If you are subscribed, you will get your email soon enough.
 
+## Used modules
+ * underscore
+ * mongoose
+ * node-uuid
+ * request
+ * express
+ * body-parser
+ * nodemailer
+
