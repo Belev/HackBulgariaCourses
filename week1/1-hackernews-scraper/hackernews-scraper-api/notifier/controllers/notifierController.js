@@ -1,12 +1,8 @@
 "use strict";
-var nodeMailer = require('nodemailer'),
-    config = require('../config/config'),
-    transporter = nodeMailer.createTransport({
-        service: 'Gmail',
-        auth: config.userInfo.auth
-    }),
+var config = require('../config/config'),
     getArticlesForEmails = require('../helpers/getArticlesForEmails'),
-    emailContentGenerator = require('../helpers/emailContentGenerator');
+    emailContentGenerator = require('../helpers/emailContentGenerator'),
+    emailSender = require('../../emailSender/emailSender');
 
 module.exports = {
     sendHelloMessage: function (req, res) {
@@ -42,16 +38,14 @@ module.exports = {
                     }
 
                     var emailContent = emailContentGenerator.generateEmailContent(articles);
-
-                    var mailOptions = {
+                    var info = {
+                        content: emailContent + '\n',
                         from: config.from,
                         to: subscriberEmail,
-                        subject: 'New articles from hacker news.',
-                        text: emailContent,
-                        html: emailContent.replace(/\n/g, '<br><br>')
+                        subject: 'New articles from hacker news.'
                     };
 
-                    transporter.sendMail(mailOptions, function (err, info) {
+                    emailSender.sendEmail(info, function (err) {
                         if (err) {
                             console.log(err);
                             return;
