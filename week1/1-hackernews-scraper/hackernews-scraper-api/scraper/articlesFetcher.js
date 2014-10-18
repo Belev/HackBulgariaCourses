@@ -2,13 +2,14 @@
 
 var https = require('https'),
     _ = require('underscore'),
-    ArticleController = require('./controllers/articleController'),
+    controllers = require('./controllers/controllers'),
     notify = require('./notifierRequest'),
     hackerNewsApiUrl = 'https://hacker-news.firebaseio.com/v0',
     notifierUrl = 'http://localhost:1515/newArticles',
     interval = 2 * 60 * 1000;
 
-ArticleController.init();
+controllers.articleController.init();
+controllers.commentController.init();
 
 function getMaxItemFromApi(url, callback) {
     https.get(url, function (res) {
@@ -26,21 +27,41 @@ function getMaxItemFromApi(url, callback) {
     });
 }
 
-function getArticleById(articleId, callback) {
-    var getArticleUrl = hackerNewsApiUrl + '/item/' + articleId + '.json';
+function getItemById(itemId, callback) {
+    var getItemUrl = hackerNewsApiUrl + '/item/' + itemId + '.json';
 
-    https.get(getArticleUrl, function (res) {
-        var article;
+    https.get(getItemUrl, function (res) {
+        var item;
         res.on('data', function (chunk) {
-            article = chunk;
+            item = chunk;
         });
 
         res.on('end', function () {
-            callback(null, JSON.parse(article));
+            callback(null, JSON.parse(item));
         });
     }).on('error', function (err) {
         return callback(err);
     });
+}
+
+function findStartIndex(currentMaxIndices, maxItemId) {
+    var commentMaxId = currentMaxIndices.commentMaxId,
+        articleMaxId = currentMaxIndices.articleMaxId,
+        maxId = Math.max(commentMaxId, articleMaxId);
+
+    var startIndex = maxId ? maxId : maxItemId;
+
+    if(!maxId) {
+        startIndex -= 75;
+    }
+
+    if (maxItemId - startIndex > 0) {
+        if (maxItemId - startIndex > 100) {
+            startIndex = maxItemId - 100;
+        }
+    }
+
+    return startIndex;
 }
 
 /**
@@ -50,36 +71,31 @@ function getArticleById(articleId, callback) {
  * If there are and are more than 100, take only 100 articles and add them to the database
  * At the end if we have given the last new article to the callback, notify our notifier to send emails
  * @param {string} url - the hacker news api url for getting article by id
- * @param articlesController - controller which operates all articles
+ * @param controllers - article and comment controller which operates all articles and comments
  * @param callback - function which will be executed for every new found article
  */
-function checkForNewArticles(url, articlesController, callback) {
-    console.log('Checking for new articles...');
+function checkForNewItems(url, controllers, callback) {
+    console.log('Checking for new items...');
     getMaxItemFromApi(url, function (err, maxItemId) {
         if (err) {
             console.log('Error: ' + err);
             return;
         }
+        var currentMaxCommentItemId = controllers.commentController.getMaxCommentId(),
+            currentMaxArticleItemId = controllers.articleController.getMaxArticleId(),
+            currentMaxIndices = {
+                commentMaxId: currentMaxCommentItemId,
+                articleMaxId: currentMaxArticleItemId
+            };
 
-        var currentMaxItemId = articlesController.getMaxArticleId(),
-            startIndex = currentMaxItemId ? currentMaxItemId : maxItemId;
-
-        console.log('Current max item ID: ' + currentMaxItemId);
-
-        if (!currentMaxItemId) {
-            startIndex -= 50;
-        }
+        var startIndex = findStartIndex(currentMaxIndices, maxItemId);
 
         if (maxItemId - startIndex > 0) {
-            if (maxItemId - startIndex > 100) {
-                startIndex = maxItemId - 100;
-            }
-
-            console.log('   Articles with id added: ');
+            console.log('   Items with id added: ');
             _.range(startIndex + 1, maxItemId + 1).forEach(function (itemId) {
-                getArticleById(itemId, function (err, article) {
-                    article.isLast = (maxItemId === itemId);
-                    callback(null, article, articlesController);
+                getItemById(itemId, function (err, item) {
+                    item.isLast = (maxItemId === itemId);
+                    callback(null, item, controllers);
                 });
             });
         } else {
@@ -88,18 +104,21 @@ function checkForNewArticles(url, articlesController, callback) {
     });
 }
 
-function processNewArticle(err, result, articlesController) {
+function processNewItem(err, item, controllers) {
     if (err) {
         console.log('Error: ' + err);
         return;
     }
 
-    if (result.type === 'story') {
-        articlesController.setMaxArticleId(result.id);
-        articlesController.saveArticle(result);
+    if (item.type === 'story') {
+        controllers.articleController.setMaxArticleId(item.id);
+        controllers.articleController.saveArticle(item);
+    } else if (item.type === 'comment') {
+        controllers.commentController.setMaxCommentId(item.id);
+        controllers.commentController.saveComment(item);
     }
 
-    if (result.isLast) {
+    if (item.isLast) {
         notify(notifierUrl);
     }
 }
@@ -107,7 +126,7 @@ function processNewArticle(err, result, articlesController) {
 module.exports = {
     begin: function () {
         var startCheckingForNewArticles = function () {
-            checkForNewArticles(hackerNewsApiUrl + '/maxitem.json', ArticleController, processNewArticle);
+            checkForNewItems(hackerNewsApiUrl + '/maxitem.json', controllers, processNewItem);
         };
 
         startCheckingForNewArticles();

@@ -26,36 +26,41 @@ module.exports = {
                 throw err;
             }
 
-            console.log('Sending emails');
+            if (Object.keys(subscribersArticles).length > 0) {
+                console.log('Sending emails');
 
-            Object.keys(subscribersArticles)
-                .forEach(function (subscriberId) {
-                    var articles = subscribersArticles[subscriberId].articles,
-                        subscriberEmail = subscribersArticles[subscriberId].email;
+                Object.keys(subscribersArticles)
+                    .forEach(function (subscriberId) {
+                        var articles = subscribersArticles[subscriberId].articles,
+                            subscriberEmail = subscribersArticles[subscriberId].email;
 
-                    if (articles.length === 0) {
-                        return;
-                    }
-
-                    var emailContent = emailContentGenerator.generateEmailContent(articles);
-                    var info = {
-                        content: emailContent + '\n',
-                        from: config.from,
-                        to: subscriberEmail,
-                        subject: 'New articles from hacker news.'
-                    };
-
-                    emailSender.sendEmail(info, function (err) {
-                        if (err) {
-                            console.log(err);
+                        if (articles.length === 0) {
                             return;
                         }
 
-                        console.log('Message has been sent successfully.');
-                    });
-                });
+                        var emailContent = emailContentGenerator.generateEmailContent(articles);
+                        var info = {
+                            content: emailContent + '\n',
+                            from: config.from,
+                            to: subscriberEmail,
+                            subject: 'New articles from hacker news.'
+                        };
 
-            res.send('Sending emails ended.');
+                        emailSender.sendEmail(info, function (err) {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+
+                            console.log('Message has been sent successfully.');
+                        });
+                    });
+
+                res.send('Sending emails ended.');
+            } else {
+                console.log('There are no subscribers to send emails to.');
+                res.send('There are no subscribers to send emails to.');
+            }
         });
     }
 };
