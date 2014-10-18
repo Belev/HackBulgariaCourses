@@ -11,5 +11,4 @@ var subscriberSchema = mongoose.Schema({
 });
 
 var Subscriber = mongoose.model('Subscriber', subscriberSchema);
-
 module.exports = Subscriber;

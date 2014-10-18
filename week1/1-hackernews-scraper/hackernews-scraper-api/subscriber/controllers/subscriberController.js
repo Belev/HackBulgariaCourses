@@ -4,8 +4,23 @@ var Subscriber = require('../models/subscriber'),
     uuid = require('node-uuid'),
     emailSender = require('../../emailSender/emailSender');
 
+function areSubscriberTypesValid(types) {
+    var storyIndex = types.indexOf('story'),
+        commentIndex = types.indexOf('comment');
+
+    var haveNotGotStoryAndComment = storyIndex === -1 && commentIndex === -1,
+        haveStoryOrCommentWithOtherType = (storyIndex > -1 || commentIndex > -1) && types.length > 1,
+        haveBothWithOtherType = storyIndex > -1 && commentIndex > -1 && types.length > 2;
+
+    return !(haveNotGotStoryAndComment || haveStoryOrCommentWithOtherType || haveBothWithOtherType);
+}
+
 module.exports = {
     subscribe: function (req, res, next) {
+        if (!areSubscriberTypesValid(req.body.type)) {
+            return next('There is invalid type. You can subscribe only for story, comment or both');
+        }
+
         var subscriberInfo = req.body;
         subscriberInfo.subscriberId = uuid.v4();
         subscriberInfo.hasConfirmed = false;
@@ -72,11 +87,11 @@ module.exports = {
         console.log(id);
 
         Subscriber.findOneAndUpdate({subscriberId: id}, {hasConfirmed: true}, function (err, subscriber) {
-            if(err) {
+            if (err) {
                 return next(err);
             }
 
-            if(!subscriber) {
+            if (!subscriber) {
                 return next('There is no such subscriber with this id.');
             }
 
