@@ -6,6 +6,6 @@ var path = require('path'),
 module.exports = {
     development: {
         rootPath: rootPath,
-        db: 'mongodb://localhost/hackernews-articles'
+        db: 'mongodb://localhost/hackernews-items'
     }
 };

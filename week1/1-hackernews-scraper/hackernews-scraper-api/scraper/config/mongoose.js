@@ -1,7 +1,8 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-    Article = require('../models/article');
+    Article = require('../models/article'),
+    Comment = require('../models/comment');
 
 module.exports = function (config) {
     mongoose.connect(config.db);
