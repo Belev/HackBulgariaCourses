@@ -1,3 +1,7 @@
+# Important information
+This application is separate from the subscriptions application.
+If you want to use it, read the Usage section.
+
 ## Usage
 To start fetching new items and add them as keywords to the database execute: node scraper.js
 
