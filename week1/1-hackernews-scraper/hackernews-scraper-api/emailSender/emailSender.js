@@ -5,7 +5,7 @@ var nodemailer = require('nodemailer'),
     transporter = nodemailer.createTransport(config.transporterOptions);
 
 module.exports = {
-    // from, to, subject, id - optional
+    // content, from, to, subject, id - optional
     sendEmail: function (info, callback) {
         var emailHtml = info.content.replace(/\n/g, '<br>');
 
