@@ -4,45 +4,13 @@ var https = require('https'),
     _ = require('underscore'),
     controllers = require('./controllers/controllers'),
     notify = require('./notifierRequest'),
+    hackerNewsRequests = require('../hacker-news-api-requests/hackerNewsRequests'),
     hackerNewsApiUrl = 'https://hacker-news.firebaseio.com/v0',
     notifierUrl = 'http://localhost:1515/newArticles',
     interval = 2 * 60 * 1000;
 
 controllers.articleController.init();
 controllers.commentController.init();
-
-function getMaxItemFromApi(url, callback) {
-    https.get(url, function (res) {
-        var maxItemId;
-
-        res.on('data', function (chunk) {
-            maxItemId = chunk;
-        });
-
-        res.on('end', function () {
-            callback(null, parseInt(maxItemId));
-        });
-    }).on('error', function (err) {
-        callback(err);
-    });
-}
-
-function getItemById(itemId, callback) {
-    var getItemUrl = hackerNewsApiUrl + '/item/' + itemId + '.json';
-
-    https.get(getItemUrl, function (res) {
-        var item;
-        res.on('data', function (chunk) {
-            item = chunk;
-        });
-
-        res.on('end', function () {
-            callback(null, JSON.parse(item));
-        });
-    }).on('error', function (err) {
-        return callback(err);
-    });
-}
 
 function findStartIndex(currentMaxIndices, maxItemId) {
     var commentMaxId = currentMaxIndices.commentMaxId,
@@ -51,13 +19,13 @@ function findStartIndex(currentMaxIndices, maxItemId) {
 
     var startIndex = maxId ? maxId : maxItemId;
 
-    if(!maxId) {
-        startIndex -= 75;
+    if (!maxId) {
+        startIndex -= 50;
     }
 
     if (maxItemId - startIndex > 0) {
-        if (maxItemId - startIndex > 100) {
-            startIndex = maxItemId - 100;
+        if (maxItemId - startIndex > 75) {
+            startIndex = maxItemId - 75;
         }
     }
 
@@ -76,11 +44,12 @@ function findStartIndex(currentMaxIndices, maxItemId) {
  */
 function checkForNewItems(url, controllers, callback) {
     console.log('Checking for new items...');
-    getMaxItemFromApi(url, function (err, maxItemId) {
+    hackerNewsRequests.getMaxItemFromApi(url, function (err, maxItemId) {
         if (err) {
             console.log('Error: ' + err);
             return;
         }
+
         var currentMaxCommentItemId = controllers.commentController.getMaxCommentId(),
             currentMaxArticleItemId = controllers.articleController.getMaxArticleId(),
             currentMaxIndices = {
@@ -93,13 +62,13 @@ function checkForNewItems(url, controllers, callback) {
         if (maxItemId - startIndex > 0) {
             console.log('   Items with id added: ');
             _.range(startIndex + 1, maxItemId + 1).forEach(function (itemId) {
-                getItemById(itemId, function (err, item) {
+                hackerNewsRequests.getItemById(hackerNewsApiUrl, itemId, function (err, item) {
                     item.isLast = (maxItemId === itemId);
                     callback(null, item, controllers);
                 });
             });
         } else {
-            console.log('There are no new articles.');
+            console.log('There are no new items.');
         }
     });
 }
