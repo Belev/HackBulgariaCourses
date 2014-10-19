@@ -9,10 +9,11 @@ function areSubscriberTypesValid(types) {
         commentIndex = types.indexOf('comment');
 
     var haveNotGotStoryAndComment = storyIndex === -1 && commentIndex === -1,
-        haveStoryOrCommentWithOtherType = (storyIndex > -1 || commentIndex > -1) && types.length > 1,
-        haveBothWithOtherType = storyIndex > -1 && commentIndex > -1 && types.length > 2;
+        haveBothWithOtherType = storyIndex > -1 && commentIndex > -1 && types.length > 2,
+        haveStoryOrCommentWithOtherType = ((storyIndex > -1 && commentIndex === -1) || (commentIndex > -1 && storyIndex === -1))
+            && types.length > 1;
 
-    return !(haveNotGotStoryAndComment || haveStoryOrCommentWithOtherType || haveBothWithOtherType);
+    return !(haveNotGotStoryAndComment || haveBothWithOtherType || haveStoryOrCommentWithOtherType);
 }
 
 module.exports = {
@@ -84,7 +85,7 @@ module.exports = {
     },
     confirm: function (req, res, next) {
         var id = req.params.id;
-        console.log(id);
+        console.log('Subscriber: ' + id + ' -> confirmation successful.');
 
         Subscriber.findOneAndUpdate({subscriberId: id}, {hasConfirmed: true}, function (err, subscriber) {
             if (err) {
