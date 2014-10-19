@@ -1,0 +1,17 @@
+{
+  "name": "scraper-to-read-whole-hacker-news",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^3.8.17",
+    "natural": "^0.1.28",
+    "q": "^1.0.1",
+    "underscore": "^1.7.0"
+  }
+}
