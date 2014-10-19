@@ -1,6 +1,6 @@
 "use strict";
 var config = require('../config/config'),
-    getArticlesForEmails = require('../helpers/getArticlesForEmails'),
+    getItemsForEmails = require('../helpers/getItemsForEmails'),
     emailContentGenerator = require('../helpers/emailContentGenerator'),
     emailSender = require('../../emailSender/emailSender');
 
@@ -21,24 +21,27 @@ module.exports = {
      * @param res - the standard response object
      */
     notifySubscribedUsers: function (req, res) {
-        getArticlesForEmails(function (err, subscribersArticles) {
+        getItemsForEmails(function (err, subscribersItems) {
             if (err) {
                 throw err;
             }
 
-            if (Object.keys(subscribersArticles).length > 0) {
+            if (Object.keys(subscribersItems).length > 0) {
                 console.log('Sending emails');
 
-                Object.keys(subscribersArticles)
-                    .forEach(function (subscriberId) {
-                        var articles = subscribersArticles[subscriberId].articles,
-                            subscriberEmail = subscribersArticles[subscriberId].email;
+                Object.keys(subscribersItems)
+                    .forEach(function (subscriberId, i) {
+                        var items = {
+                                articles: subscribersItems[subscriberId].articles,
+                                comments: subscribersItems[subscriberId].comments
+                            },
+                            subscriberEmail = subscribersItems[subscriberId].email;
 
-                        if (articles.length === 0) {
+                        if (items.articles.length === 0 && items.comments.length === 0) {
                             return;
                         }
 
-                        var emailContent = emailContentGenerator.generateEmailContent(articles);
+                        var emailContent = emailContentGenerator.generateEmailContent(items);
                         var info = {
                             content: emailContent + '\n',
                             from: config.from,
@@ -58,8 +61,8 @@ module.exports = {
 
                 res.send('Sending emails ended.');
             } else {
-                console.log('There are no subscribers to send emails to.');
-                res.send('There are no subscribers to send emails to.');
+                console.log('There are no interesting new articles or comments for subscribers to send emails to.');
+                res.send('There are no interesting new articles or comments for subscribers to send emails to.');
             }
         });
     }
