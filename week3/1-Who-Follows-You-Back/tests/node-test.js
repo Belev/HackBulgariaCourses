@@ -19,6 +19,26 @@ describe('node tests', function () {
             expect(node).to.have.property('_value');
             expect(node).to.have.property('_children').with.length(0);
         });
+
+        it('node with given value different than string should throw TypeError', function () {
+            function createNodeWithValueNumber() {
+                var node = new Node(15);
+            }
+
+            function createNodeWithObject() {
+                var node = new Node({
+                    value: 'test'
+                });
+            }
+
+            function createNodeWithArray() {
+                var node = new Node([1, 2, 3]);
+            }
+
+            assert.throw(createNodeWithValueNumber, TypeError);
+            assert.throw(createNodeWithObject, TypeError);
+            assert.throw(createNodeWithArray, TypeError);
+        });
     });
 
     describe('getters tests', function () {

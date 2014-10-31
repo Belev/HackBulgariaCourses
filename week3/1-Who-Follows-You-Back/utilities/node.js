@@ -6,13 +6,17 @@ var Node = (function () {
             throw new Error('Can not create node without value.');
         }
 
+        if (typeof value !== 'string') {
+            throw new TypeError('Value must be a string.');
+        }
+
         this._value = value;
         this._children = [];
     }
 
     Node.prototype = {
         addChild: function (childNode) {
-            if(!(childNode instanceof Node)) {
+            if (!(childNode instanceof Node)) {
                 throw TypeError('Can not add child different from Node.');
             }
 
