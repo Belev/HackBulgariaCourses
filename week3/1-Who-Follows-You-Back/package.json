@@ -1,0 +1,13 @@
+{
+  "name": "1-Who-Follows-You-Back",
+  "version": "0.0.1",
+  "author": "Martin Belev",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.10.1"
+  },
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "mocha": "^2.0.1"
+  }
+}
