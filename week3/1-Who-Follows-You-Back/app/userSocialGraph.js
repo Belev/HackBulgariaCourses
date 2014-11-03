@@ -7,7 +7,7 @@ var userSocialGraph = (function () {
     function getUserFollowings(username) {
         var id = this._config.clientId;
         var secret = this._config.clientSecret;
-        var url = this._config.githubApiUrl
+        var path = this._config.path
             .replace(/:username/, username)
             .replace(/:client_id/, id)
             .replace(/:client_secret/, secret);
@@ -15,8 +15,8 @@ var userSocialGraph = (function () {
         var defer = q.defer();
 
         var options = {
-            host: 'api.github.com',
-            path: url,
+            host: this._config.host,
+            path: path,
             method: 'GET',
             headers: {
                 'User-Agent': 'Who-Follows-You-Back'
@@ -44,13 +44,13 @@ var userSocialGraph = (function () {
     function builtSocialGraph(users, usersFollowingsCounts, depth, done) {
         console.log('CurrentDepth: ' + depth);
 
+        var currentUser = users.shift();
+        var that = this;
+
         if (depth === this._depth) {
             done();
         }
         else {
-            var currentUser = users.shift();
-            var that = this;
-
             getUserFollowings.call(this, currentUser)
                 .then(function (followings) {
                     followings.forEach(function (following) {
@@ -66,8 +66,6 @@ var userSocialGraph = (function () {
                     }
 
                     console.log(usersFollowingsCounts);
-//                    console.log('to: ' + currentUser);
-//                console.log(usersFollowingsCounts[0]);
 
                     if (usersFollowingsCounts[0] === 0) {
                         usersFollowingsCounts.shift();
@@ -78,7 +76,7 @@ var userSocialGraph = (function () {
                     }
                 })
                 .fail(function (err) {
-                    console.log('rejected: ' + err);
+                    done(err);
                 });
         }
     }
@@ -97,7 +95,7 @@ var userSocialGraph = (function () {
 
     UserSocialGraph.prototype = {
         init: function (done) {
-            builtSocialGraph.call(this, [this._username], [], 0, done)
+            builtSocialGraph.call(this, [this._username], [], 0, done);
         },
         following: function () {
             return this._socialGraph.getNeighboursFor(this._username)
@@ -122,7 +120,7 @@ var userSocialGraph = (function () {
         stepsTo: function (username) {
             return this._socialGraph.pathBetween(this._username, username, true);
         },
-        getGraph: function () {
+        getGraphAsString: function () {
             return this._socialGraph.toString();
         }
     };
