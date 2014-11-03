@@ -3,8 +3,8 @@
 var uuid = require('node-uuid');
 var config = require('../config/githubConfig');
 var Graph = require('../../utilities/graph');
-
 var UserSocialGraph = require('../userSocialGraph');
+
 var graphs = {};
 
 module.exports = {
@@ -17,10 +17,15 @@ module.exports = {
                 Graph: Graph
             });
 
-            newSocialGraph.init(function () {
+            newSocialGraph.init(function (err) {
                 var id = uuid.v4();
-                graphs[id] = newSocialGraph;
-                res.send({graphId: id});
+
+                if (err) {
+                    res.send({error: err});
+                } else {
+                    graphs[id] = newSocialGraph;
+                    res.send({graphId: id});
+                }
             })
         }
         catch (err) {
@@ -32,7 +37,7 @@ module.exports = {
         var graph = graphs[req.params.graphId];
 
         if (graph) {
-            result = graph.getGraph();
+            result = JSON.parse(graph.getGraphAsString());
         } else {
             result = 'The graph has not been initialized yet';
         }
@@ -76,7 +81,8 @@ module.exports = {
         }
 
         var stepsCount = graph.stepsTo(username);
+        var result = stepsCount ? stepsCount.toString() : 'There is no such user in the social graph.';
 
-        res.send({stepsCount: stepsCount});
+        res.send({result: result});
     }
 };
