@@ -110,7 +110,7 @@ var Graph = (function () {
                 result.push(createNodeString(node));
             });
 
-            return result;
+            return JSON.stringify(result);
         }
     };
 
