@@ -1,7 +1,6 @@
 "use strict";
 var express = require('express'),
-    app = express(),
-    bodyParser = require('body-parser');
+    app = express();
 
 require('./config/express')(app);
 require('./config/routes')(app);
