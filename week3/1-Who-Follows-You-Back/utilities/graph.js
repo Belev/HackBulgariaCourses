@@ -105,9 +105,10 @@ var Graph = (function () {
         },
         toString: function () {
             var result = [];
-            for (var i in this._nodes) {
-                result.push(createNodeString(this._nodes[i]));
-            }
+
+            this._nodes.forEach(function (node) {
+                result.push(createNodeString(node));
+            });
 
             return result;
         }
