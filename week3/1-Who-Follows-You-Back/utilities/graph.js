@@ -3,12 +3,14 @@
 var Node = require('./node');
 
 var Graph = (function () {
-    function hasPathBetween(fromNode, toNode) {
+    function hasPathBetween(fromNode, toNode, wantSteps) {
         var toNodeValue = toNode.getValue();
         var hasPath = false;
+        var steps = -1;
         var visited = {};
 
         var queue = [];
+        fromNode.level = 0;
         queue.push(fromNode);
         visited[fromNode.getValue()] = true;
 
@@ -17,12 +19,14 @@ var Graph = (function () {
 
             if (currentNode.getValue() === toNodeValue) {
                 hasPath = true;
+                steps = currentNode.level;
                 break;
             }
 
             var children = currentNode.getChildren();
 
             children.forEach(function (childNode) {
+                childNode.level = currentNode.level + 1;
                 var childNodeValue = childNode.getValue();
 
                 if (!visited[childNodeValue]) {
@@ -32,7 +36,16 @@ var Graph = (function () {
             });
         }
 
-        return hasPath;
+        return wantSteps ? steps : hasPath;
+    }
+
+    function createNodeString(node) {
+        var nodeValue = node.getValue();
+        var children = node.getChildren().map(function (child) {
+            return child._value;
+        });
+
+        return nodeValue + ':[' + children + ']';
     }
 
     function Graph() {
@@ -61,7 +74,7 @@ var Graph = (function () {
 
             return node ? node.getChildren() : undefined;
         },
-        pathBetween: function (fromNodeValue, toNodeValue) {
+        pathBetween: function (fromNodeValue, toNodeValue, wantSteps) {
             var fromNode = this.findNode(fromNodeValue);
             var toNode = this.findNode(toNodeValue);
 
@@ -69,7 +82,7 @@ var Graph = (function () {
                 return false;
             }
 
-            return hasPathBetween(fromNode, toNode);
+            return hasPathBetween(fromNode, toNode, wantSteps);
         },
         findNode: function (nodeValue) {
             return this._nodes
@@ -89,6 +102,14 @@ var Graph = (function () {
         },
         nodesCount: function () {
             return this._nodes.length;
+        },
+        toString: function () {
+            var result = [];
+            for (var i in this._nodes) {
+                result.push(createNodeString(this._nodes[i]));
+            }
+
+            return result;
         }
     };
 
