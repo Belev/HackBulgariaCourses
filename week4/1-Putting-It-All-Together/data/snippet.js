@@ -8,15 +8,18 @@ module.exports = {
     addSnipet: function (snippetInfo) {
         var defer = q.defer();
 
-        snippetInfo['snippetId'] = uuid.v4();
-        Snippet.create(snippetInfo, function (err, snippet) {
-            if (err) {
-                defer.reject(err);
-            } else {
-                defer.resolve(snippet);
-            }
-        });
-
+        if (!snippetInfo) {
+            defer.reject('snippetInfo is required.');
+        } else {
+            snippetInfo['snippetId'] = uuid.v4();
+            Snippet.create(snippetInfo, function (err, snippet) {
+                if (err) {
+                    defer.reject(err);
+                } else {
+                    defer.resolve(snippet);
+                }
+            });
+        }
         return defer.promise;
     },
     updateSnippet: function (snippetId, newSnippetInfo) {
@@ -57,16 +60,11 @@ module.exports = {
 
         this.findSnippetById(snippetId)
             .then(function (snippet) {
-                var snippetInfo = {
-                    snippetId: snippet.snippetId,
-                    codeLanguage: snippet.codeLanguage,
-                    fileName: snippet.fileName,
-                    code: snippet.code,
-                    createdBy: snippet.createdBy
-                };
+                var snippetInfo = snippet;
 
-                snippet.remove();
-                defer.resolve(snippetInfo);
+                snippet.remove(function () {
+                    defer.resolve(snippetInfo);
+                });
             }).fail(function (err) {
                 defer.reject(err);
             });
@@ -124,6 +122,20 @@ module.exports = {
                     }
                 });
         }
+
+        return defer.promise;
+    },
+    getSnippetsCount: function () {
+        var defer = q.defer();
+
+        Snippet.find()
+            .exec(function (err, snippets) {
+                if (err) {
+                    defer.reject(err);
+                } else {
+                    defer.resolve(snippets.length);
+                }
+            });
 
         return defer.promise;
     }
