@@ -23,7 +23,7 @@ module.exports = {
         var defer = q.defer();
 
         if (!newSnippetInfo) {
-            defer.reject('You must provide new snippet information to update with.');
+            defer.reject('You must provide updateInfo to update snippet.');
         } else {
             this.findSnippetById(snippetId)
                 .then(function (snippet) {
@@ -90,32 +90,40 @@ module.exports = {
     findSnippetsByCreator: function (creatorName) {
         var defer = q.defer();
 
-        Snippet.find()
-            .where('createdBy').equals(creatorName)
-            .exec(function (err, snippets) {
-                if (err) {
-                    defer.reject(err);
-                } else {
-                    defer.resolve(snippets);
-                }
-            });
+        if (!creatorName) {
+            defer.reject('You must provide creatorName to search snippets.');
+        } else {
+            Snippet.find()
+                .where('createdBy').equals(creatorName)
+                .exec(function (err, snippets) {
+                    if (err) {
+                        defer.reject(err);
+                    } else {
+                        defer.resolve(snippets);
+                    }
+                });
+        }
 
         return defer.promise;
     },
     findSnippetById: function (snippetId) {
         var defer = q.defer();
 
-        Snippet.findOne()
-            .where('snippetId').equals(snippetId)
-            .exec(function (err, snippet) {
-                if (err) {
-                    defer.reject(err);
-                } else if (!snippet) {
-                    defer.reject('There is no such snippet in the database.');
-                } else {
-                    defer.resolve(snippet);
-                }
-            });
+        if (!snippetId) {
+            defer.reject('You must provide id.');
+        } else {
+            Snippet.findOne()
+                .where('snippetId').equals(snippetId)
+                .exec(function (err, snippet) {
+                    if (err) {
+                        defer.reject(err);
+                    } else if (!snippet) {
+                        defer.reject('There is no such snippet in the database.');
+                    } else {
+                        defer.resolve(snippet);
+                    }
+                });
+        }
 
         return defer.promise;
     }
