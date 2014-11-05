@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function (snippetData) {
+module.exports = function (snippetData, mongoose) {
     describe('Updating snippet tests.', function () {
         var addedSnippet;
 
@@ -17,6 +17,10 @@ module.exports = function (snippetData) {
                     addedSnippet = snippet;
                     done();
                 })
+        });
+
+        after(function () {
+            mongoose.connection.db.dropDatabase();
         });
 
         describe('With invalid id or update info.', function () {

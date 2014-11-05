@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function (snippetData) {
+module.exports = function (snippetData, mongoose) {
     describe('Adding snippets tests.', function () {
         describe('With some invalid snippet information fields.', function () {
             it('Adding snippet without codeLanguage should fail with error message Validation failed', function (done) {
@@ -90,6 +90,10 @@ module.exports = function (snippetData) {
         });
 
         describe('With valid snippet information.', function () {
+            before(function () {
+                mongoose.connection.db.dropDatabase();
+            });
+
             it('Adding valid snippet should add the snippet to database and return the added snippet', function (done) {
                 var snippetToAdd = {
                     codeLanguage: 'javascript',
