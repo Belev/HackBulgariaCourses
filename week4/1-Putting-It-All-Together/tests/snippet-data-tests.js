@@ -13,13 +13,14 @@ describe('Snippet data tests.', function () {
         require('../config/mongoose')(config, mongoose);
     });
 
-    afterEach(function () {
+    after(function () {
         mongoose.connection.db.dropDatabase();
     });
 
-    require('./snippet-data-component-tests/adding-tests')(snippetData);
-    require('./snippet-data-component-tests/updating-tests')(snippetData);
-    require('./snippet-data-component-tests/deleting-tests')(snippetData);
+    require('./snippet-data-component-tests/adding-tests')(snippetData, mongoose);
+    require('./snippet-data-component-tests/updating-tests')(snippetData, mongoose);
+    require('./snippet-data-component-tests/deleting-tests')(snippetData, mongoose);
+    require('./snippet-data-component-tests/getting-tests')(snippetData, mongoose);
 });
 
 
