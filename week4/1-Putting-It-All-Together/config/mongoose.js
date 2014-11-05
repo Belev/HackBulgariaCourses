@@ -1,9 +1,8 @@
 "use strict";
 
-var mongoose = require('mongoose'),
-    Snippet = require('../data/models/Snippet');
+var Snippet = require('../data/models/Snippet');
 
-module.exports = function (config) {
+module.exports = function (config, mongoose) {
     mongoose.connect(config.db);
 
     var db = mongoose.connection;
