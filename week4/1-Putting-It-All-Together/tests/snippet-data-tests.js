@@ -17,10 +17,10 @@ describe('Snippet data tests.', function () {
         mongoose.connection.db.dropDatabase();
     });
 
-    require('./snippet-data-component-tests/adding-tests')(snippetData, mongoose);
-    require('./snippet-data-component-tests/updating-tests')(snippetData, mongoose);
-    require('./snippet-data-component-tests/deleting-tests')(snippetData, mongoose);
-    require('./snippet-data-component-tests/getting-tests')(snippetData, mongoose);
+    require('./snippet-data-component-tests/adding')(snippetData, mongoose);
+    require('./snippet-data-component-tests/updating')(snippetData, mongoose);
+    require('./snippet-data-component-tests/deleting')(snippetData, mongoose);
+    require('./snippet-data-component-tests/getting')(snippetData, mongoose);
 });
 
 
