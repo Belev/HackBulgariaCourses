@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function (request, snippetData) {
+module.exports = function (request, snippetData, mongoose) {
     describe('DELETE /delete_snippet', function () {
         var addedSnippet;
 
@@ -14,6 +14,10 @@ module.exports = function (request, snippetData) {
                 addedSnippet = snippet;
                 done();
             });
+        });
+
+        after(function () {
+            mongoose.connection.db.dropDatabase();
         });
 
         it('Without provided id should return 400, text/html and "You must provide id."',

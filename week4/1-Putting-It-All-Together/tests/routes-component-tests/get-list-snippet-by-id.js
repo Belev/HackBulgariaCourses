@@ -1,7 +1,11 @@
 "use strict";
 
-module.exports = function (request, snippetData) {
+module.exports = function (request, snippetData, mongoose) {
     describe('GET /list_snippet_by_id/:id', function () {
+        after(function () {
+            mongoose.connection.db.dropDatabase();
+        });
+
         it('Without given id should return 404, text/html, "Cannot GET /list_snippet_by_id"',
             function (done) {
                 request.get('/list_snippet_by_id')

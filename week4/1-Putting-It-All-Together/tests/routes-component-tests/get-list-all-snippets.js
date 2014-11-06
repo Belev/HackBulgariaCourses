@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function (request, snippetData) {
+module.exports = function (request, snippetData, mongoose) {
     function addDumpSnippetToDb(snippetData) {
         return snippetData.addSnipet({
             code: 'test',
@@ -11,6 +11,10 @@ module.exports = function (request, snippetData) {
     }
 
     describe('GET /list_all_snippets', function () {
+        after(function () {
+            mongoose.connection.db.dropDatabase();
+        });
+
         it('Without snippets in db should return 200, application/json and empty array',
             function (done) {
                 request.get('/list_all_snippets')

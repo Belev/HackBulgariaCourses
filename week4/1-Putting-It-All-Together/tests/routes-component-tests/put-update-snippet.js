@@ -1,21 +1,25 @@
 "use strict";
 
-module.exports = function (request, snippetData) {
-    var addedSnippet;
-
-    beforeEach(function (done) {
-        snippetData.addSnipet({
-            codeLanguage: 'test',
-            createdBy: 'me',
-            fileName: 'test',
-            code: 'code'
-        }).then(function (snippet) {
-            addedSnippet = snippet;
-            done();
-        });
-    });
-
+module.exports = function (request, snippetData, mongoose) {
     describe('PUT /update_snippet', function () {
+        var addedSnippet;
+
+        beforeEach(function (done) {
+            snippetData.addSnipet({
+                codeLanguage: 'test',
+                createdBy: 'me',
+                fileName: 'test',
+                code: 'code'
+            }).then(function (snippet) {
+                addedSnippet = snippet;
+                done();
+            });
+        });
+
+        after(function () {
+            mongoose.connection.db.dropDatabase();
+        });
+
         it('Sending valid id and updateInfo should return content-type application/json and 200',
             function (done) {
                 var updateInfo = {

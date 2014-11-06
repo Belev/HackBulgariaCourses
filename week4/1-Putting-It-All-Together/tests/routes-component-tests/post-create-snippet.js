@@ -1,7 +1,11 @@
 "use strict";
 
-module.exports = function (request) {
+module.exports = function (request, mongoose) {
     describe('POST /create_snippet', function () {
+        after(function () {
+            mongoose.connection.db.dropDatabase();
+        });
+
         it('After sending valid data should return content-type application/json and 200',
             function (done) {
                 var snippeToCreate = {
