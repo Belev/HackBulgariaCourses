@@ -44,4 +44,5 @@ describe('Server routes tests.', function () {
 
     require('./routes-component-tests/post-create-snippet')(request);
     require('./routes-component-tests/put-update-snippet')(request, snippetData);
+    require('./routes-component-tests/delete-delete-snippet')(request, snippetData);
 });
