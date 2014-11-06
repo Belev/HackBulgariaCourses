@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function (request, snippetData) {
-    describe('DELETE /delete_snippet tests.', function () {
+    describe('DELETE /delete_snippet', function () {
         var addedSnippet;
 
         before(function (done) {
