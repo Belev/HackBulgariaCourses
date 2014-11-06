@@ -4,9 +4,7 @@ require('./config/chai');
 
 var snippetData = require('../data/snippet');
 var mongoose = require('mongoose');
-var config = {
-    db: 'mongodb://localhost/snippets-tests'
-};
+var config = require('./config/config');
 
 describe('Snippet data tests.', function () {
     before(function () {
