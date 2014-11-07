@@ -2,6 +2,7 @@
 
 var uuid = require('node-uuid');
 var q = require('q');
+var languageDetector = require('../languageDetector/detector');
 var Snippet = require('./models/Snippet');
 
 module.exports = {
@@ -12,6 +13,11 @@ module.exports = {
             defer.reject('snippetInfo is required.');
         } else {
             snippetInfo['snippetId'] = uuid.v4();
+
+            if (!snippetInfo.codeLanguage && snippetInfo.fileName) {
+                snippetInfo.codeLanguage = languageDetector.getLanguageName(snippetInfo.fileName);
+            }
+
             Snippet.create(snippetInfo, function (err, snippet) {
                 if (err) {
                     defer.reject(err);
