@@ -3,18 +3,6 @@
 module.exports = function (snippetData, mongoose) {
     describe('Adding snippets tests.', function () {
         describe('With some invalid snippet information fields.', function () {
-            it('Adding snippet without codeLanguage should fail with error message Validation failed', function (done) {
-                snippetData.addSnipet({
-                    fileName: 'test',
-                    code: 'test',
-                    createdBy: 'me'
-                }).fail(function (err) {
-                    expect(err).to.be.ok;
-                    expect(err.message).to.be.equal('Validation failed');
-                    done();
-                });
-            });
-
             it('Adding snippet without fileName should fail with error message Validation failed', function (done) {
                 snippetData.addSnipet({
                     codeLanguage: 'JavaScript',
