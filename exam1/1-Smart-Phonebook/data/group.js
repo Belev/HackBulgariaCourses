@@ -5,7 +5,62 @@ var q = require('q'),
     utils = require('../utils/utils'),
     Group = require('./models/Group');
 
-var groupData = (function () {
+var fuzzyHelpers = (function () {
+    function findFuzzyGroups(contactId, commonWord) {
+        var defer = q.defer();
+
+        Group.find()
+            .exec(function (err, allGroups) {
+                if (err) {
+                    console.log(err);
+                    defer.reject(err);
+                } else {
+                    var fuzzyGroups = allGroups.filter(function (group) {
+                        if (group.type === 'normal') {
+                            return utils.areWordsReallyClose(group.name, commonWord);
+                        } else {
+                            return group.name
+                                .filter(function (name) {
+                                    return utils.areWordsReallyClose(name, commonWord);
+                                }).length > 0;
+                        }
+                    });
+
+                    if (fuzzyGroups.length === 0) {
+                        defer.resolve({message: 'No fuzzy groups.'});
+                    } else {
+                        fuzzyGroups.forEach(function (fuzzyGroup, index) {
+                            updateToFuzzyGroup(fuzzyGroup, contactId, commonWord);
+
+                            if (index === fuzzyGroups.length - 1) {
+                                defer.resolve({message: 'done'});
+                            }
+                        });
+                    }
+                }
+            });
+
+        return defer.promise;
+    }
+
+    function updateToFuzzyGroup(fuzzyGroup, contactId, commonWord) {
+        if (fuzzyGroup.type === 'normal') {
+            fuzzyGroup.name = [fuzzyGroup.name];
+            fuzzyGroup.type = 'fuzzy';
+        }
+
+        fuzzyGroup.contacts.push(contactId);
+        fuzzyGroup.name.push(commonWord);
+        fuzzyGroup.markModified('name');
+        fuzzyGroup.save();
+    }
+
+    return {
+        findFuzzyGroups: findFuzzyGroups
+    }
+})();
+
+var normalHelpers = (function () {
     function createNewGroup(name, contactIds) {
         var newGroup = {
             name: name,
@@ -30,6 +85,13 @@ var groupData = (function () {
         });
     }
 
+    return {
+        createNewGroup: createNewGroup,
+        addContactToExistingGroups: addContactToExistingGroups
+    }
+})();
+
+var groupData = (function () {
     function findGroup(contactId, commonWord) {
         Group.find()
             .where('name').equals(commonWord)
@@ -37,9 +99,17 @@ var groupData = (function () {
                 if (err) {
                     console.log(err);
                 } else if (groups.length === 0) {
-                    createNewGroup(commonWord, [contactId]);
+                    fuzzyHelpers.findFuzzyGroups(contactId, commonWord)
+                        .then(function (response) {
+                            if (response.message === 'No fuzzy groups.') {
+                                normalHelpers.createNewGroup(commonWord, [contactId]);
+                            }
+                        })
+                        .fail(function (err) {
+                            console.log(err);
+                        });
                 } else {
-                    addContactToExistingGroups(groups, contactId);
+                    normalHelpers.addContactToExistingGroups(groups, contactId);
                 }
             });
     }
