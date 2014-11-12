@@ -2,6 +2,11 @@
 
 var contactsData = require('../data').contacts;
 
+function errorHandler(err, res, next) {
+    res.status(400);
+    next(err.message);
+}
+
 module.exports = {
     create: function (req, res, next) {
         contactsData.addContact(req.body)
@@ -14,7 +19,7 @@ module.exports = {
                 res.locals.contact = contact;
                 next();
             }, function (err) {
-                next(err);
+                errorHandler(err, res, next);
             });
     },
     getAll: function (req, res, next) {
@@ -29,7 +34,7 @@ module.exports = {
 
                 res.json(contacts);
             }, function (err) {
-                next(err);
+                errorHandler(err, res, next);
             });
     },
     getById: function (req, res, next) {
@@ -40,7 +45,7 @@ module.exports = {
                     personIdentifier: contact.personIdentifier
                 });
             }, function (err) {
-                next(err.message);
+                errorHandler(err, res, next);
             });
     },
     deleteById: function (req, res, next) {
@@ -51,10 +56,9 @@ module.exports = {
                     contactId: contact.id
                 });
 
-                res.locals.id = contact.id;
-                next();
+
             }, function (err) {
-                next(err);
+                errorHandler(err, res, next);
             });
     }
 };
