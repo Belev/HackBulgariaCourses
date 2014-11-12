@@ -11,6 +11,7 @@ module.exports = {
                 next();
 //                console.log(response.message);
             }, function (err) {
+                res.status(400);
                 next(err.message);
             });
     },
@@ -20,6 +21,7 @@ module.exports = {
             .then(function (response) {
 //                console.log(response.message);
             }, function (err) {
+                res.status(400);
                 next(err.message);
             })
     },
@@ -28,6 +30,7 @@ module.exports = {
             .then(function (groups) {
                 res.json(groups);
             }, function (err) {
+                res.status(400);
                 next(err.message);
             });
     }
