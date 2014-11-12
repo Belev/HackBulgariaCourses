@@ -8,6 +8,7 @@ module.exports = {
 
         groupsData.addNewContactToGroups(contact)
             .then(function (response) {
+                next();
 //                console.log(response.message);
             }, function (err) {
                 next(err.message);
@@ -19,7 +20,7 @@ module.exports = {
             .then(function (response) {
 //                console.log(response.message);
             }, function (err) {
-                next(err);
+                next(err.message);
             })
     },
     getAll: function (req, res, next) {
@@ -27,7 +28,7 @@ module.exports = {
             .then(function (groups) {
                 res.json(groups);
             }, function (err) {
-                next(err);
+                next(err.message);
             });
     }
 };
