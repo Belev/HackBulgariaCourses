@@ -1,0 +1,17 @@
+{
+  "name": "3-Site-Mapper",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "mongoose": "^3.8.19",
+    "q": "^1.1.1",
+    "simplecrawler": "^0.3.10"
+  }
+}
