@@ -60,6 +60,20 @@ var sitemapData = (function () {
                 .exec(function (err, sitemap) {
                     handleCallbackResult(err, sitemap, defer);
                 });
+
+            return defer.promise;
+        };
+
+        this.findByStatus = function (status) {
+            var defer = q.defer();
+
+            Sitemap.findOne()
+                .where('status').equals(status)
+                .exec(function (err, sitemap) {
+                    handleCallbackResult(err, sitemap, defer);
+                });
+
+            return defer.promise;
         }
     }
 
