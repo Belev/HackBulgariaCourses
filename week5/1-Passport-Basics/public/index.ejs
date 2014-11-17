@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./partials/head.ejs %>
+</head>
+<body class="container">
+
+<header>
+    <% include ./partials/header.ejs %>
+</header>
+
+<% if (user) { %>
+<div class="jumbotron">
+    <h2>Hello, <%= user.username %></h2>
+    <p> You have successfully logged in.</p>
+</div>
+<% } else { %>
+<div class="jumbotron">
+    <h1>Basic authentication with local passport.</h1>
+
+    <p>Welcome to passport basics. You can register and then login.</p>
+</div>
+<% } %>
+
+<footer>
+    <% include ./partials/footer.ejs %>
+</footer>
+
+</body>
+</html>
