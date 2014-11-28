@@ -6,6 +6,7 @@ var currentUser;
 var chatInfrastructure = io.connect('http://localhost:8080/chatInfrastructure');
 var chatCommunication = io.connect('http://localhost:8080/chatCommunication');
 
+// get query parameter value, if no such query parameter then the use is in the global room
 var roomName = (location.search.match(/room=(.+?)(&|$)/) || [, 'global'])[1];
 
 chatInfrastructure.on('nameSet', function (data) {
@@ -39,7 +40,6 @@ $(function () {
     $sendBtn.on('click', function () {
         var data = {
             username: currentUser,
-            roomName: roomName,
             message: $message.val(),
             type: 'userMessage'
         };
