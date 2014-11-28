@@ -1,0 +1,123 @@
+html {
+    height: 100%;
+}
+
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    height: 98%;
+}
+
+#chatroom {
+    height: 90%;
+    background-color: #EFFFEC;
+}
+
+#messages {
+    height: 93%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#messages div {
+    padding: 5px;
+    margin-bottom: 3px;
+}
+
+#messages .myMessage {
+    width: 45%;
+    background-color: #00d6b2;
+}
+
+#messages .userMessage {
+    margin-left: 50%;
+    width: 48%;
+    background-color: #b5d592;
+}
+
+input#message {
+    width: 94.9%;
+}
+
+input#send {
+    width: 74px;
+}
+
+header {
+    background-color: #4192C1;
+    margin-top: 15px;
+}
+
+header h1 {
+    padding: 5px;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 0px;
+}
+
+footer {
+    padding: 5px;
+    background-color: #4192C1;
+    color: #FFFFFF;
+    font-size: 25px;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin: 0px;
+    margin-bottom: 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    color: #00B7FF;
+}
+
+#nameform {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 85.6%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 62px;
+    z-index: 1000;
+}
+
+.backdrop {
+    width: 100%;
+    height: 100%;
+    background-color: #777777;
+}
+
+.popup {
+    position: absolute;
+    left: 40%;
+    top: 38%;
+    height: 100px;
+    width: 300px;
+    background: #FFFFFF;
+}
+
+.pophead {
+    background-color: #4192C1;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 8px 3px;
+    text-align: center;
+}
+
+.popbody {
+    text-align: center;
+    padding-top: 7.5%;
+}
+
+#nickname {
+    margin-right: 10px;
+}
