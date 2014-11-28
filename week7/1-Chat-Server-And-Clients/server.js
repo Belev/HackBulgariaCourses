@@ -15,7 +15,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+
+app.get('/', routes.index);
+app.get('/chatroom', routes.chatroom);
 app.use('/users', users);
 
 app.use(function (req, res, next) {

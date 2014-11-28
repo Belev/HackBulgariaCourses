@@ -1,8 +1,7 @@
-var express = require('express');
-var router = express.Router();
+module.exports.index = function (req, res) {
+    res.render('index', {title: 'Express'});
+};
 
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
-});
-
-module.exports = router;
+module.exports.chatroom = function (req, res) {
+    res.render('chatroom', {title: 'Express Chat'});
+};
