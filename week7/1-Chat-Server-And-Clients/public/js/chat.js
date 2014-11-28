@@ -3,22 +3,33 @@ var $message = $('#message');
 var $sendBtn = $('#send');
 var currentUser;
 
-var socket = io.connect('http://localhost:8080');
+var chatInfrastructure = io.connect('http://localhost:8080/chatInfrastructure');
+var chatCommunication = io.connect('http://localhost:8080/chatCommunication');
 
-socket.on('nameSet', function (data) {
-    $('#nameform').hide();
+var roomName = (location.search.match(/room=(.+?)(&|$)/) || [, 'global'])[1];
+
+chatInfrastructure.on('nameSet', function (data) {
     currentUser = data.name;
-    $messages.append('<div class="systemMessage">' + 'Hello ' + currentUser + ',</div>');
+
+    chatInfrastructure.emit('joinRoom', {'roomName': roomName, 'username': currentUser});
+
+    $('#nameform').hide();
+    $messages.append('<div class="welcomeMessage">' + 'Hello ' + '<strong>' + currentUser + '</strong>,</div>');
+
+    chatInfrastructure.on('userEntered', function (user) {
+        $messages.append('<div class="systemMessage">' + '<strong>' + user.name + '</strong> has joined the room - ' + user.roomName + '.</div>');
+    });
+
+    chatInfrastructure.on('message', function (data) {
+        var messageInfo = JSON.parse(data);
+        $messages.append('<div class="' + messageInfo.type + '">' + messageInfo.message + '</div>');
+    });
 });
 
-socket.on('message', function (data) {
-    data = JSON.parse(data);
+chatCommunication.on('message', function (data) {
+    var messageInfo = JSON.parse(data);
 
-    if (data.username) {
-        $messages.append('<div class="' + data.type + '"><strong><span class="name">' + data.username + ":</span></strong> " + data.message + '</div>');
-    } else {
-        $messages.append('<div class="' + data.type + '">' + data.message + '</div>');
-    }
+    $messages.append('<div class="' + messageInfo.type + '"><strong><span class="name">' + messageInfo.username + ":</span></strong> " + messageInfo.message + '</div>');
 
     $messages[0].scrollTop = $messages[0].scrollHeight;
 });
@@ -28,15 +39,16 @@ $(function () {
     $sendBtn.on('click', function () {
         var data = {
             username: currentUser,
+            roomName: roomName,
             message: $message.val(),
             type: 'userMessage'
         };
 
-        socket.send(JSON.stringify(data));
+        chatCommunication.send(JSON.stringify(data));
         $message.val('');
     });
 
-    $('#setname').click(function () {
-        socket.emit("setName", {name: $('#nickname').val()});
+    $('#setname').on('click', function () {
+        chatInfrastructure.emit('setName', {name: $('#nickname').val(), roomName: roomName});
     });
 });
