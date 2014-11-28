@@ -64,6 +64,6 @@ The main chat server could only expose a websocket interface. That way your cons
 
 ##To run the app
 
-*Make bower install and npm install
-*node server.js and you can go to http://localhost:8080
-*If you want to join a room just add query parameter room with the room name. Example: http://localhost:8080/?room=test
+* Make bower install and npm install
+* node server.js and you can go to http://localhost:8080
+* If you want to join a room just add query parameter room with the room name. Example: http://localhost:8080/?room=test
