@@ -5,12 +5,12 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-public class ConvertToGrayscale {
+public class ConvertToGreyscale {
     private static final double LUMINOSITY_RED_FACTOR = 0.21;
     private static final double LUMINOSITY_GREEN_FACTOR = 0.72;
     private static final double LUMINOSITY_BLUE_FACTOR = 0.07;
 
-    private static void convertImageToGrayscale(String imagePath) throws IOException {
+    private static void convertImageToGreyscale(String imagePath) throws IOException {
         BufferedImage image = ImageIO.read(new File(imagePath));
         String imageExtension = getImageExtension(imagePath);
 
@@ -41,7 +41,7 @@ public class ConvertToGrayscale {
             }
         }
 
-        ImageIO.write(image, imageExtension, new File(getGrayscaleImagePath(imagePath, imageExtension)));
+        ImageIO.write(image, imageExtension, new File(getGreyscaleImagePath(imagePath, imageExtension)));
 
     }
 
@@ -49,8 +49,8 @@ public class ConvertToGrayscale {
         return imagePath.substring(imagePath.lastIndexOf(".") + 1);
     }
 
-    private static String getGrayscaleImagePath(String imagePath, String imageExtension) {
-        return imagePath.substring(0, imagePath.lastIndexOf(".")) + "-grayscale." + imageExtension;
+    private static String getGreyscaleImagePath(String imagePath, String imageExtension) {
+        return imagePath.substring(0, imagePath.lastIndexOf(".")) + "-greyscale." + imageExtension;
     }
 
     public static void main(String[] args) throws IOException {
@@ -59,7 +59,7 @@ public class ConvertToGrayscale {
         String imagePath = input.nextLine();
         input.close();
         
-        convertImageToGrayscale(imagePath);
+        convertImageToGreyscale(imagePath);
         
 //        Test with the images in images folder.
 //        String johnRomeroPath = "./images/john-romero.jpg";
