@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -214,7 +215,7 @@ public class ProblemsImplTests {
     public void testCopyCharacter() {
         assertEquals("aaa", problems.copyEveryChar("a", 3));
         assertEquals("aabbaadd", problems.copyEveryChar("abad", 2));
-        assertEquals("Wwhhaatt  tthhee  hheellll", problems.copyEveryChar("What the hell", 2));
+        assertEquals("WWhhaatt  tthhee  hheellll", problems.copyEveryChar("What the hell", 2));
     }
 
     @Test
@@ -238,7 +239,7 @@ public class ProblemsImplTests {
     }
 
     @Test
-    public void testDecodeUrl() {
+    public void testDecodeUrl() throws UnsupportedEncodingException {
         assertEquals("http://meyerweb.com/eric/tools/dencoder/", problems.decodeURL("http%3A%2F%2Fmeyerweb.com%2Feric%2Ftools%2Fdencoder%2F"));
         assertEquals("http://javarevisited.blogspot.com/2012/10/10-java-string-interview-question-answers-top.html", problems.decodeURL("http%3A%2F%2Fjavarevisited.blogspot.com%2F2012%2F10%2F10-java-string-interview-question-answers-top.html"));
     }
