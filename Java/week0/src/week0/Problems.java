@@ -1,5 +1,7 @@
 package week0;
 
+import java.io.UnsupportedEncodingException;
+
 public interface Problems {
     boolean isOdd(int number);
 
@@ -47,7 +49,7 @@ public interface Problems {
 
     int countOcurrences(String needle, String haystack);
 
-    String decodeURL(String input);
+    String decodeURL(String input) throws UnsupportedEncodingException;
 
     int sumOfNumbers(String input);
 
