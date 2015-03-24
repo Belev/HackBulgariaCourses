@@ -43,8 +43,6 @@ public class ProblemsImpl implements Problems {
 
     @Override
     public int kthMin(int k, int[] array) {
-        Arrays.sort(array);
-
         return quickSelect(array, 0, array.length - 1, k);
     }
 
