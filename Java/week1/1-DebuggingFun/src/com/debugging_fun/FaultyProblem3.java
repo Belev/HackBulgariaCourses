@@ -5,12 +5,12 @@ public class FaultyProblem3 {
     public String reverseEveryWordInString(String sentence){
         String[] words = sentence.split(" ");
         for (String word: words){
-            sentence = sentence.replace(word, reverse(word));
+            sentence = sentence.replaceFirst(word, reverse(word));
         }
         return sentence;
     }
 
-    private CharSequence reverse(String word) {
+    private String reverse(String word) {
         return Utils.reverseMe(word);
     }
 }
