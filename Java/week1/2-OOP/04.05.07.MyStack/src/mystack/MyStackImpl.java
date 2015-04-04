@@ -1,7 +1,7 @@
 package mystack;
 
 public class MyStackImpl<T> implements MyStack<T> {
-    private class Element {
+    protected class Element {
         public T value;
         public Element next;
 
@@ -14,22 +14,47 @@ public class MyStackImpl<T> implements MyStack<T> {
     private Element top;
     private int length;
 
+    public MyStackImpl() {
+        this(null);
+    }
+
+    public MyStackImpl(Element top) {
+        this.setTop(top);
+        this.setLength(0);
+    }
+
+    public Element getTop() {
+        return top;
+    }
+
+    public void setTop(Element top) {
+        this.top = top;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     @Override
     public void push(T element) {
-        this.length++;
+        this.setLength(this.getLength() + 1);
 
-        Element currentTop = this.top;
+        Element currentTop = this.getTop();
         Element newTop = new Element(element, currentTop);
-        this.top = newTop;
+        this.setTop(newTop);
     }
 
     @Override
     public T pop() {
-        if (this.top != null) {
-            this.length--;
+        if (this.getTop() != null) {
+            this.setLength(this.getLength() - 1);
 
-            T value = this.top.value;
-            this.top = this.top.next;
+            T value = this.getTop().value;
+            this.setTop(this.getTop().next);
 
             return value;
         }
@@ -39,7 +64,7 @@ public class MyStackImpl<T> implements MyStack<T> {
 
     @Override
     public T peek() {
-        return this.top != null ? this.top.value : null;
+        return this.getTop() != null ? this.getTop().value : null;
     }
 
     @Override
@@ -51,12 +76,11 @@ public class MyStackImpl<T> implements MyStack<T> {
 
     @Override
     public boolean isEmpty() {
-        return this.length == 0;
+        return this.getLength() == 0;
     }
 
     @Override
     public int length() {
-        return this.length;
+        return this.getLength();
     }
-
 }
