@@ -24,26 +24,22 @@ public class NameMatching {
 		int knownFemaleNamesCount = Integer.parseInt(knownMaleFemaleNames[1]);
 		countMaleAndFemaleNames(names);
 		
-		double maleGuessChance = 100.0;
-		double femaleGuessChance = 100.0;
+		double maleGuessChance = 1.0;
+		double femaleGuessChance = 1.0;
 		
 		int maleDifference = Math.abs(knownMaleNamesCount - maleNamesCount);
 		if (maleDifference > 1) {
-			maleGuessChance = (1.0 / calculateFactorial((maleDifference))) * 100;
+			maleGuessChance = (1.0 / calculateFactorial((maleDifference)));
 					
 		}
 		
 		int femaleDifference = Math.abs(knownFemaleNamesCount - femaleNamesCount);
 		if (femaleDifference > 1) {
-			femaleGuessChance = (1.0 / calculateFactorial((femaleDifference))) * 100;
+			femaleGuessChance = (1.0 / calculateFactorial((femaleDifference)));
 					
 		}
 		
-		if (maleGuessChance != 100.0 && femaleGuessChance != 100.0) {
-			return (maleGuessChance + femaleGuessChance) / 2.0;
-		}
-		
-		return maleGuessChance != 100.0 ? maleGuessChance : femaleGuessChance;
+		return (maleGuessChance * femaleGuessChance * 100);
 	}
 	
 	private static Boolean isFemale(String name) {
