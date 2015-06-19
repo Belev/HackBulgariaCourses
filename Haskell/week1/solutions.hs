@@ -51,17 +51,17 @@ convert "eur" "bgn" money = money * 1.95
 convert _ _ money = error "Invalid currency"
 
 -- 13. Head
-head' :: [Int] -> Int
+head' :: [a] -> a
 head' (x:_) = x
 head' _ = error "Can not get head from empty list"
 
 -- 14. Tail
-tail' :: [Int] -> [Int]
+tail' :: [a] -> [a]
 tail' (_:xs) = xs
 tail' _ = error "Can not get tail from empty list"
 
 -- 16. Last
-last' :: [Int] -> Int
+last' :: [a] -> a
 last' [x] = x
 last' (x:xs) = last' xs
 last' [] = error "Can not get element of empty list."
@@ -77,12 +77,12 @@ mult multiplier (x:xs) = (multiplier * x) : (mult multiplier xs)
 mult multiplier [] = []
 
 -- 19. Get the n-th element of a list
-nth :: Int -> [Int] -> Int
+nth :: Int -> [a] -> a
 nth 0 (x:_) = x
 nth index (x:xs) = nth (index - 1) xs
 nth index [] = error "Can not get unexisting element"
 
-nthBuiltIn :: Int -> [Int] -> Int
+nthBuiltIn :: Int -> [a] -> a
 nthBuiltIn index xs = xs!!index
 
 -- 20. Is an element member of a list?
@@ -107,7 +107,7 @@ isFibonacciSequence seq = isFibSeq 0 seq
 
 -- 22. Get the sum of a list
 sum' :: [Int] -> Int
-sum' (x:xs) = x + sum xs
+sum' (x:xs) = x + sum' xs
 sum' [] = 0
 
 -- 23. Get the product of a list
@@ -132,23 +132,23 @@ string2number numberStr = read numberStr :: Int
 -- 28. Get the zodiac sign from an ID
 
 -- 30. Concatenate the lists
-concatenate :: [[Int]] -> [Int]
+concatenate :: [[a]] -> [a]
 concatenate [] = []
 concatenate (x:xs) = x ++ concatenate xs
 
 -- 31. Take all elements of a list without the last one
-init' :: [Int] -> [Int]
+init' :: [a] -> [a]
 init' [] = error "You can't do that with the empty list!"
 init' xs = reverse (tail (reverse xs))
 
 -- 32. Take the first n elements from a list
-take' :: Int -> [Int] -> [Int]
+take' :: Int -> [a] -> [a]
 take' 0 _ = []
 take' _ [] = []
 take' count (x:xs) = x : take' (count - 1) xs
 
 -- 33. Drop the first n elements from a list
-drop' :: Int -> [Int] -> [Int]
+drop' :: Int -> [a] -> [a]
 drop' 0 (xs) = xs
 drop' _ [] = []
 drop' count (x:xs) = drop' (count - 1) xs
