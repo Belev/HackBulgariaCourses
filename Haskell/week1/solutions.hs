@@ -61,24 +61,22 @@ tail' (_:xs) = xs
 -- 16. Last
 last' :: [Int] -> Int
 last' (x:xs) = last' xs
-last' [x] = x
+last' [] = error "Can not get element of empty list."
 
 -- 17. Double all elements
 double :: [Int] -> [Int]
 double (x:xs) = (2 * x) : (double xs)
 double [] = []
-double [x] = [2 * x]
 
 -- 18. More generic - make it possible to multiply all elements in a list with a given number
 mult :: Int -> [Int] -> [Int]
 mult multiplier (x:xs) = (multiplier * x) : (mult multiplier xs)
 mult multiplier [] = []
-mult multiplier [x] = [multiplier * x]
 
 -- 19. Get the n-th element of a list
 nth :: Int -> [Int] -> Int
-nth index (x:xs) = nth (index - 1) xs
 nth 0 (x:_) = x
+nth index (x:xs) = nth (index - 1) xs
 nth index [] = error "Can not get unexisting element"
 
 nthBuiltIn :: Int -> [Int] -> Int
@@ -107,21 +105,17 @@ isFibonacciSequence seq = isFibSeq 0 seq
 -- 22. Get the sum of a list
 sum' :: [Int] -> Int
 sum' (x:xs) = x + sum xs
-sum' [x] = x
+sum' [] = 0
 
 -- 23. Get the product of a list
 product' :: [Int] -> Int
 product' (x:xs) = x * product' xs
-product' [x] = x
+product' [] = 1
 
 -- 24. Multiply lists
 multLists :: [Int] -> [Int] -> [Int]
 multLists (x:xs) (y:ys) = (x * y) : multLists xs ys
-multLists (x:_) [y] = x * y : []
-multLists [x] (y:_) = x * y : []
-multLists [] (y:_) = []
-multLists (x:_) [] = []
-multLists [] [] = []
+multLists _ _ = []
 
 -- 25. Number to string
 number2string :: Int -> String
@@ -130,4 +124,16 @@ number2string number = show number
 -- 26. String to number
 string2number :: String -> Int
 string2number numberStr = read numberStr :: Int
+
+-- 27. Is valid ID?
+-- 28. Get the zodiac sign from an ID
+
+-- 30. Concatenate the lists
+concatenate :: [Int] -> [Int] -> [Int]
+concatenate a b = a ++ b
+
+-- 31. Take all elements of a list without the last one
+init' :: [Int] -> [Int]
+init' [] = error "You can't do that with the empty list!"
+init' xs = reverse (tail (reverse xs))
 
