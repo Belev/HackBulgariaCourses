@@ -1,22 +1,22 @@
 -- 01. Even
 even' :: Int -> Bool
-even' x = if mod x 2 == 0 then False else True
+even' number = mod number 2 == 0
 
 -- 02. Odd
 odd' :: Int -> Bool
-odd' x = not (even' x)
+odd' number = not (even' number)
 
 -- 03. Calculate BMI
 bmi :: Double -> Double -> Double
-bmi height weight = weight / (height * height)
+bmi height weight = weight / height^2
 
 -- 04. Convert degrees to radians
 deg2rad :: Double -> Double
-deg2rad d = d * (pi / 180)
+deg2rad degrees = degrees * (pi / 180)
 
 -- 05. Convert radians to degrees
 rad2deg :: Double -> Double
-rad2deg r = r * (180 / pi)
+rad2deg radians = radians * (180 / pi)
 
 -- 06. Does it form a triangle?
 isTriangle :: Int -> Int -> Int -> Bool
@@ -38,6 +38,7 @@ calculate operator a b = case operator of
                                     '-' -> a - b
                                     '*' -> a * b
                                     '/' -> a / b
+                                    _ -> error "Not supported operator!"
 
 -- 10. Currency Converter (working with dollars, levs and euros)
 convert :: String -> String -> Double -> Double
@@ -57,9 +58,11 @@ head' _ = error "Can not get head from empty list"
 -- 14. Tail
 tail' :: [Int] -> [Int]
 tail' (_:xs) = xs
+tail' _ = error "Can not get tail from empty list"
 
 -- 16. Last
 last' :: [Int] -> Int
+last' [x] = x
 last' (x:xs) = last' xs
 last' [] = error "Can not get element of empty list."
 
@@ -129,11 +132,35 @@ string2number numberStr = read numberStr :: Int
 -- 28. Get the zodiac sign from an ID
 
 -- 30. Concatenate the lists
-concatenate :: [Int] -> [Int] -> [Int]
-concatenate a b = a ++ b
+concatenate :: [[Int]] -> [Int]
+concatenate [] = []
+concatenate (x:xs) = x ++ concatenate xs
 
 -- 31. Take all elements of a list without the last one
 init' :: [Int] -> [Int]
 init' [] = error "You can't do that with the empty list!"
 init' xs = reverse (tail (reverse xs))
 
+-- 32. Take the first n elements from a list
+take' :: Int -> [Int] -> [Int]
+take' 0 _ = []
+take' _ [] = []
+take' count (x:xs) = x : take' (count - 1) xs
+
+-- 33. Drop the first n elements from a list
+drop' :: Int -> [Int] -> [Int]
+drop' 0 (xs) = xs
+drop' _ [] = []
+drop' count (x:xs) = drop' (count - 1) xs
+
+-- 34. Zipping lists
+zip' :: [a] -> [b] -> [(a,b)]
+zip' [] _ = []
+zip' _ [] = []
+zip' (x:xs) (y:ys) = (x,y) : zip' xs ys
+
+-- 35. Now unzip it!
+unzip' :: [(a,b)] -> ([a], [b])
+unzip' [] = ([], [])
+unzip' ((a,b):xs) = (a : fst unzip'', b : snd unzip'')
+       where unzip'' = unzip' xs
