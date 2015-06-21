@@ -164,3 +164,47 @@ unzip' :: [(a,b)] -> ([a], [b])
 unzip' [] = ([], [])
 unzip' ((a,b):xs) = (a : fst unzip'', b : snd unzip'')
        where unzip'' = unzip' xs
+
+-- 36. Grouping - still not working
+--group' :: (Eq a) => [a] -> [[a]]
+--group' [] = []
+--group' (x:y:xs) = if x == y
+--                  then x : group' (y : xs)
+--                  else [x] : group' (y : xs)
+
+-- 37. Generate all pythagorean triples
+pyths from to = [(a,b,c) | a <- [from..to], b <- [from..to], c <- [from..to], a^2 + b^2 == c^2, a < b, b < c]
+
+-- 38. Return a function, which multiplies a number by a factor
+multiplyBy :: (Num n) => n -> n -> n
+multiplyBy n = \x -> n * x
+
+-- 39. Get the last digit of all numbers in a list
+lastDigits :: [Int] -> [Int]
+lastDigits (x:xs) = (mod x 10) : lastDigits xs
+lastDigits [] = []
+
+-- 40. Turn all strings in a list to integers
+stringsToIntegers :: [String] -> [Int]
+stringsToIntegers (x:xs) = read x : stringsToIntegers xs
+stringsToIntegers [] = []
+
+-- 41. Get the fibonacci numbers with the corresponding indices
+fibonaccis :: [Int] -> [Int]
+fibonaccis (x:xs) = fib x : fibonaccis xs
+fibonaccis [] = []
+
+-- 42. Take a function and apply it to all elements of a list
+
+-- 44. Get all odd numbers in a list
+odds :: [Int] -> [Int]
+odds (x:xs) = if odd' x
+              then x : odds xs
+              else odds xs
+odds [] = []
+
+-- 45. More generic - return a function that filters all the numbers in a list divisible by 'n'
+--divisibles :: Int -> [Int] -> [Int]
+--divisibles n = \(x:xs) -> if mod x n == 0
+--                          then x : divisibles n xs
+--                          else divisibles n xs
