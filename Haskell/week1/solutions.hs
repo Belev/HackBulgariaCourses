@@ -166,11 +166,11 @@ unzip' ((a,b):xs) = (a : fst unzip'', b : snd unzip'')
        where unzip'' = unzip' xs
 
 -- 36. Grouping - still not working
---group' :: (Eq a) => [a] -> [[a]]
---group' [] = []
---group' (x:y:xs) = if x == y
---                  then x : group' (y : xs)
---                  else [x] : group' (y : xs)
+--group' :: [Int] -> [[Int]]
+--group' [] = [[]]
+--group' (x:xs) = if x == head (head xs)
+--                then (x : (head xs)) : group' xs
+--                else ([x]) : group' xs
 
 -- 37. Generate all pythagorean triples
 pyths from to = [(a,b,c) | a <- [from..to], b <- [from..to], c <- [from..to], a^2 + b^2 == c^2, a < b, b < c]
@@ -195,6 +195,10 @@ fibonaccis (x:xs) = fib x : fibonaccis xs
 fibonaccis [] = []
 
 -- 42. Take a function and apply it to all elements of a list
+applyToAll :: (Int -> Int) -> [Int] -> [Int]
+applyToAll f = \xs -> case xs of
+               [] -> []
+               (x:xs) -> f x : applyToAll f xs
 
 -- 44. Get all odd numbers in a list
 odds :: [Int] -> [Int]
@@ -204,7 +208,18 @@ odds (x:xs) = if odd' x
 odds [] = []
 
 -- 45. More generic - return a function that filters all the numbers in a list divisible by 'n'
---divisibles :: Int -> [Int] -> [Int]
---divisibles n = \(x:xs) -> if mod x n == 0
---                          then x : divisibles n xs
---                          else divisibles n xs
+divisibles :: Int -> [Int] -> [Int]
+divisibles 0 = error "Can not divide by 0."
+divisibles n = \xs -> case xs of
+               [] -> []
+               (x:xs) -> if mod x n == 0
+                         then x : divisibles n xs
+                         else divisibles n xs
+
+-- 46. Take a predicate and filter a list
+filterBy :: (Int -> Bool) -> [Int] -> [Int]
+filterBy pred = \xs -> case xs of
+                [] -> []
+                (x:xs) -> if pred x
+                          then x : filterBy pred xs
+                          else filterBy pred xs
