@@ -216,6 +216,7 @@ divisibles n = \xs -> case xs of
                          else divisibles n xs
 
 -- 46. Take a predicate and filter a list
+<<<<<<< HEAD
 filterBy :: (a -> Bool) -> [a] -> [a]
 filterBy pred (x:xs) | pred x = x : filterBy pred xs
                      | otherwise = filterBy pred xs
@@ -236,3 +237,11 @@ reducel _ value [] = value
 map' :: (a -> b) -> [a] -> [b]
 map' _ [] = []
 map' f (x:xs) = f x : map f xs
+=======
+filterBy :: (Int -> Bool) -> [Int] -> [Int]
+filterBy pred = \xs -> case xs of
+                [] -> []
+                (x:xs) -> if pred x
+                          then x : filterBy pred xs
+                          else filterBy pred xs
+>>>>>>> 741f5334cde3b28fdf9ea3ca56bfe2fdcd5f4694
