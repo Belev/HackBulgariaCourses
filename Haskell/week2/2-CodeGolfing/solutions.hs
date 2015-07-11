@@ -29,10 +29,35 @@ everyNth :: Int -> [a] -> [a]
 everyNth position l = map snd $ filter (\(x, y) -> mod x position == 0) $ zip [1..] l
 
 -- 07. Get the local maximas in a list of Integers
-localMaxima :: [Int] -> [Int]
-localMaxima [] = []
-localMaxima (x:[]) = []
-localMaxima (x:y:[]) = []
+localMaxima ::Ord a => [a] -> [a]
+localMaxima (_:_:[]) = []
 localMaxima (x:y:z:zs)
             | x < y && y > z = y : localMaxima (y:z:zs)
             | otherwise = localMaxima (y:z:zs)
+
+-- 08. Map a function to a list of lists
+mapMap :: (a -> b) -> [[a]] -> [[b]]
+mapMap f = map $ map (\x -> f x)
+
+-- 09. Filter a list of lists
+filterFilter :: (a -> Bool) -> [[a]] -> [[a]]
+filterFilter f = map $ filter f
+
+-- 10. Generate the unit matrix by given element and dimensions
+unit :: Int -> Int -> [[Int]]
+unit elem dim = map row [0..dim-1]
+	where row pos = (take pos $ repeat 0) ++ [elem] ++ (take (dim-pos-1) $ repeat 0)
+
+-- 11. Get the nth row and column of a matrix
+row :: Int -> [[a]] -> [a]
+row n matrix = matrix !! n
+
+-- 12. Transpose a matrix
+transpose' :: [[a]]->[[a]]
+transpose' ([]:_) = []
+transpose' x = (map head x) : transpose' (map tail x)
+
+-- 13. Sum of matrices
+sumMatrices :: Num a => [[a]] -> [[a]] -> [[a]]
+sumMatrices (x:xs) (y:ys) = zipWith (+) x y : sumMatrices xs ys
+sumMatrices _ _ = []
