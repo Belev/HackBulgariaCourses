@@ -88,7 +88,7 @@ nthBuiltIn index xs = xs!!index
 -- 20. Is an element member of a list?
 member :: Int -> [Int] -> Bool
 member number (x:xs) = if number == x then True else member number xs
-member number _ = False
+member _  _ = False
 
 memberBuiltIn :: Int -> [Int] -> Bool
 memberBuiltIn number xs = elem number xs
@@ -166,11 +166,10 @@ unzip' ((a,b):xs) = (a : fst unzip'', b : snd unzip'')
        where unzip'' = unzip' xs
 
 -- 36. Grouping - still not working
---group' :: (Eq a) => [a] -> [[a]]
---group' [] = []
---group' (x:y:xs) = if x == y
---                  then x : group' (y : xs)
---                  else [x] : group' (y : xs)
+group' :: Eq a => [a] -> [[a]]
+group' (x:xs) = (x:equals):group' remainder
+  where (equals, remainder) = span (== x) xs
+group' [] = []
 
 -- 37. Generate all pythagorean triples
 pyths from to = [(a,b,c) | a <- [from..to], b <- [from..to], c <- [from..to], a^2 + b^2 == c^2, a < b, b < c]
@@ -195,6 +194,10 @@ fibonaccis (x:xs) = fib x : fibonaccis xs
 fibonaccis [] = []
 
 -- 42. Take a function and apply it to all elements of a list
+applyToAll :: (Int -> Int) -> [Int] -> [Int]
+applyToAll f = \xs -> case xs of
+               [] -> []
+               (x:xs) -> f x : applyToAll f xs
 
 -- 44. Get all odd numbers in a list
 odds :: [Int] -> [Int]
@@ -204,7 +207,32 @@ odds (x:xs) = if odd' x
 odds [] = []
 
 -- 45. More generic - return a function that filters all the numbers in a list divisible by 'n'
---divisibles :: Int -> [Int] -> [Int]
---divisibles n = \(x:xs) -> if mod x n == 0
---                          then x : divisibles n xs
---                          else divisibles n xs
+divisibles :: Int -> [Int] -> [Int]
+divisibles 0 = error "Can not divide by 0."
+divisibles n = \xs -> case xs of
+               [] -> []
+               (x:xs) -> if mod x n == 0
+                         then x : divisibles n xs
+                         else divisibles n xs
+
+-- 46. Take a predicate and filter a list
+filterBy :: (a -> Bool) -> [a] -> [a]
+filterBy pred (x:xs) | pred x = x : filterBy pred xs
+                     | otherwise = filterBy pred xs
+filterBy _ [] = []
+                
+-- 48. Concatenate the lists
+concat' :: [[a]] -> [a]
+concat' (x:xs) = x ++ concat' xs
+concat' [] = []
+
+-- 49. Reducing
+reducel :: (a -> b -> a) -> a -> [b] -> a
+reducel f value (x:xs) = reducel f (f value x) xs
+reducel _ value [] = value
+
+-- 50. Reduce in the other direction
+
+map' :: (a -> b) -> [a] -> [b]
+map' _ [] = []
+map' f (x:xs) = f x : map f xs
